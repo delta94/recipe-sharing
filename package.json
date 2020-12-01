@@ -8,8 +8,10 @@
     "start": "next start"
   },
   "dependencies": {
+    "@headlessui/react": "^0.2.0",
     "next": "10.0.3",
     "react": "17.0.1",
+    "react-datepicker": "^3.3.0",
     "react-dom": "17.0.1"
   },
   "devDependencies": {
