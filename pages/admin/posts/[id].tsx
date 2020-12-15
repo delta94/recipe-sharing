@@ -8,14 +8,11 @@ import Layout from '@components/Layout'
 import { useRouter } from 'next/router'
 import axios from '@utils/axios'
 import { useEffect, useState } from 'react'
-import { BsBookmarkFill, BsBookmark } from 'react-icons/bs'
 
 export default function PostDetail() {
   const router = useRouter()
   const [dataSource, setDataSource] = useState() as any
   const [error, setError] = useState(true)
-  const [bookmarkQuantity, setBookmarkQuantity] = useState(0)
-  const [isBookmarked, setIsBookmarked] = useState(false)
   const initData = async () => {
     const { id } = router.query
     try {
@@ -24,8 +21,6 @@ export default function PostDetail() {
         method: 'get',
       })
       setDataSource(data)
-      setBookmarkQuantity(data.bookmark_quantity)
-      setIsBookmarked(data.is_bookmarked)
       document.querySelector('#content').innerHTML = data?.content
       setError(false)
       debugger
@@ -41,35 +36,22 @@ export default function PostDetail() {
     if (error) initData()
   }, [initData])
 
-  const bookmark = async () => {
-    setIsBookmarked(true)
-    setBookmarkQuantity(bookmarkQuantity + 1)
+  const confirmPost = async () => {
+    const { id } = router.query
     try {
-      await axios({
-        url: `/v1/bookmarks`,
-        method: 'post',
-        data: { post_id: dataSource.id }
+      const data = await axios({
+        url: `/v1/posts/${id}/confirm`,
+        method: 'put'
       })
+      if (data.status === 200) {
+        alert('Xác nhận thành công bài viết')
+        router.push('/admin')
+      }
+
     } catch (error_) {
       console.log(error_)
     }
   }
-
-  const unBookmark = async () => {
-    setIsBookmarked(false)
-    setBookmarkQuantity(bookmarkQuantity - 1)
-    try {
-      await axios({
-        url: `/v1/bookmarks`,
-        method: 'delete',
-        data: { post_id: dataSource.id }
-      })
-      debugger
-    } catch (error_) {
-      console.log(error_)
-    }
-  }
-
   return (
     <Layout title='Post'>
       <span className='px-10 flex items-center justify-between'>
@@ -85,12 +67,9 @@ export default function PostDetail() {
           <b className='text-blue-500 uppercase ml-5'>{`${dataSource?.country_name}`}</b>
         </div>
         <div className='flex items-center'>
-          <p className='font-bold mr-10'>Bookmark quantity: {bookmarkQuantity}</p>
-          {isBookmarked ? (
-            <BsBookmarkFill color='#3730a3' size={24} onClick={unBookmark} />
-          ) : (
-              <BsBookmark color='#3730a3' size={24} onClick={bookmark} />
-            )}
+          <button onClick={confirmPost} className='h-8 px-4 m-2 text-sm text-white transition-colors duration-150 bg-indigo-700 rounded-lg hover:bg-indigo-800'>
+            Confirm
+          </button>
         </div>
       </span>
       <div className='relative py-10 bg-white overflow-hidden'>
