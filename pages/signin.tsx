@@ -1,9 +1,15 @@
 import { useRef } from 'react'
-import { signIn } from 'next-auth/client'
+import { signIn, getSession } from 'next-auth/client'
+import { NextPage } from 'next'
+import Router, { useRouter } from 'next/router'
+import { Alert, AlertTitle } from '@chakra-ui/react'
+import { WarningIcon } from '@chakra-ui/icons'
 import LogoF from '../assets/logo.svg'
 
-const Login = () => {
+const Login: NextPage = () => {
   const loginRef = useRef(null)
+  const router = useRouter()
+  const { query } = router
 
   const onSubmit = (event) => {
     event.preventDefault()
@@ -11,7 +17,6 @@ const Login = () => {
     const form = loginRef.current
     const email = form.email.value
     const password = form.password.value
-    console.log(email, password)
 
     signIn('credentials', { email, password, callbackUrl: '/' })
   }
@@ -89,6 +94,13 @@ const Login = () => {
               </div>
             </div>
 
+            {query?.error === 'CredentialsSignin' && (
+              <Alert status='error'>
+                <WarningIcon sx={{ color: 'red !important', mr: 2 }} />
+                <AlertTitle mr={2}>Wrong email or password!</AlertTitle>
+              </Alert>
+            )}
+
             <div className='mt-6'>
               <form ref={loginRef} onSubmit={onSubmit}>
                 <div>
@@ -165,6 +177,21 @@ const Login = () => {
       </div>
     </div>
   )
+}
+
+Login.getInitialProps = async ({ req, res }) => {
+  const session = await getSession({ req })
+
+  if (session?.user?.name) {
+    if (res) {
+      res.writeHead(302, { Location: '/' })
+      res.end()
+    } else {
+      Router.push('/')
+    }
+  }
+
+  return {}
 }
 
 export default Login

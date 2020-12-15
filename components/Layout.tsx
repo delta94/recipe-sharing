@@ -112,6 +112,15 @@ export default function Layout({ title, children }: { title: string; children: a
                   {!loading && session?.user?.name ? (
                     <>
                       {' '}
+                      <span className='inline-flex rounded-md shadow-sm'>
+                        <Link href='/post/new'>
+                          <a
+                            href='/post/new'
+                            className='inline-flex items-center justify-center px-4 py-2 border border-transparent text-base leading-6 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition ease-in-out duration-150'>
+                            Create post
+                          </a>
+                        </Link>
+                      </span>
                       <div className='relative flex-shrink-0 ml-4'>
                         <div>
                           <button
