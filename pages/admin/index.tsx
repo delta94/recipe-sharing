@@ -28,21 +28,6 @@ const Admin = () => {
   useEffect(() => {
     if (error) initData()
   }, [initData])
-
-  // const confirmPost = async (id: number) => {
-  //   try {
-  //     const data = await axios({
-  //       url: `/posts/${id}/confirm`,
-  //       method: 'put',
-  //     })
-  //     if (data.status === 200) {
-  //       alert('Xác nhận thành công bài viết')
-  //       router.push('/admin')
-  //     }
-  //   } catch (error_) {
-  //     console.log(error_)
-  //   }
-  // }
   return (
     <Layout title='Admin'>
       <div className='relative mx-auto text-gray-600 w-2/3 mb-10'>

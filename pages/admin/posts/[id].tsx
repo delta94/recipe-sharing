@@ -8,10 +8,12 @@ import Layout from '@components/Layout'
 import Router, { useRouter } from 'next/router'
 import axios from '@utils/axios'
 import { useEffect, useState } from 'react'
+import { useToast } from '@chakra-ui/react'
 
 import { getSession } from 'next-auth/client'
 
 const PostDetail = () => {
+  const toast = useToast()
   const router = useRouter()
   const [dataSource, setDataSource] = useState() as any
   const [error, setError] = useState(true)
@@ -28,7 +30,14 @@ const PostDetail = () => {
     } catch (error_) {
       setError(true)
       if (error_?.response.status === 403) {
-        alert('Bài viết chưa được phê duyệt')
+        toast({
+          title: 'Warning',
+          description: 'The post is not confirmed',
+          status: 'warning',
+          position: 'top',
+          duration: 3000,
+          isClosable: true,
+        })
         router.push('/')
       }
     }
@@ -45,7 +54,14 @@ const PostDetail = () => {
         method: 'put'
       })
       if (data.status === 200) {
-        alert('Xác nhận thành công bài viết')
+        toast({
+          title: 'Success',
+          description: 'Confirm the post successfully',
+          status: 'success',
+          position: 'top',
+          duration: 3000,
+          isClosable: true,
+        })
         router.push('/admin')
       }
 
