@@ -7,9 +7,12 @@ import Image from 'next/image'
 import Link from 'next/link'
 import Router from 'next/router'
 import { getSession } from 'next-auth/client'
+import axios from 'axios'
+import isValid from 'date-fns/isValid'
+import parseISO from 'date-fns/parseISO'
 import Layout from '../../components/Layout'
 
-const Profile = ({ session }) => (
+const Profile = ({ profile }) => (
   <Layout title='Profile'>
     <div className='bg-white rounded-lg shadow px-5 py-6 sm:px-6'>
       <div className='mt-6 bg-white shadow px-4 py-5 sm:rounded-lg sm:p-6'>
@@ -21,7 +24,11 @@ const Profile = ({ session }) => (
           <div className='mt-2 flex items-center'>
             <Image
               className='w-full rounded-md object-cover'
-              src={session?.full_info?.avatar}
+              src={
+                profile?.avatar.startsWith('http')
+                  ? profile?.avatar
+                  : 'https://www.gravatar.com/avatar/86b862d65a8e66b9db99136cd16ff394?default=https%3A%2F%2Fcloud.digitalocean.com%2Favatars%2Fdefault1.png&amp;secure=true"'
+              }
               alt=''
               width='48'
               height='48'
@@ -42,26 +49,26 @@ const Profile = ({ session }) => (
             <div className='py-4 space-y-1 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4'>
               <dt className='text-sm leading-5 font-medium text-gray-500'>Full name</dt>
               <dd className='flex space-x-4 text-sm leading-5 text-gray-900 sm:mt-0 sm:col-span-2'>
-                <span className='flex-grow'> {session?.user?.name} </span>
+                <span className='flex-grow'> {profile?.name} </span>
               </dd>
             </div>
             <div className='py-4 space-y-1 sm:grid sm:py-5 sm:grid-cols-3 sm:gap-4'>
               <dt className='text-sm leading-5 font-medium text-gray-500'>Email address</dt>
               <dd className='flex space-x-4 text-sm leading-5 text-gray-900 sm:mt-0 sm:col-span-2'>
-                <span className='flex-grow'> {session?.user?.email}</span>
+                <span className='flex-grow'> {profile?.email}</span>
               </dd>
             </div>
             <div className='py-4 space-y-1 sm:grid sm:py-5 sm:grid-cols-3 sm:gap-4'>
               <dt className='text-sm leading-5 font-medium text-gray-500'>Gender</dt>
               <dd className='flex space-x-4 text-sm leading-5 text-gray-900 sm:mt-0 sm:col-span-2'>
-                <span className='flex-grow'> {session?.full_info?.gender ? 'Male' : 'Female'}</span>
+                <span className='flex-grow'> {profile?.gender ? 'Male' : 'Female'}</span>
               </dd>
             </div>
             <div className='py-4 space-y-1 sm:grid sm:py-5 sm:grid-cols-3 sm:gap-4'>
               <dt className='text-sm leading-5 font-medium text-gray-500'>Birthday</dt>
               <dd className='flex space-x-4 text-sm leading-5 text-gray-900 sm:mt-0 sm:col-span-2'>
                 <span className='flex-grow'>
-                  {session?.full_info?.birthday && format(new Date(session?.full_info?.birthday), 'dd-MM-yyyy')}
+                  {isValid(parseISO(profile?.birthday)) && format(new Date(profile?.birthday), 'dd-MM-yyyy')}
                 </span>
               </dd>
             </div>
@@ -87,16 +94,23 @@ const Profile = ({ session }) => (
 
 Profile.getInitialProps = async ({ req, res }): Promise<any> => {
   const session = await getSession({ req })
-
-  if (!session?.user?.name) {
-    if (res) {
-      res.writeHead(302, { Location: '/' })
-      res.end()
-    } else {
-      Router.push('/')
+  try {
+    if (!session?.user?.name) {
+      if (res) {
+        res.writeHead(302, { Location: '/' })
+        res.end()
+      } else {
+        Router.push('/')
+      }
     }
+    const { data } = await axios.get('http://localhost:3000/api/v1/profile', {
+      headers: { Authorization: session?.token },
+    })
+
+    return { profile: data }
+  } catch (error) {
+    return { profile: null }
   }
-  return { session }
 }
 
 export default Profile

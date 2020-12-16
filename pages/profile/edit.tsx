@@ -13,9 +13,13 @@ import format from 'date-fns/format'
 import axios from 'axios'
 import authAxios from '@utils/axios'
 import { useToast } from '@chakra-ui/react'
+import isValid from 'date-fns/isValid'
+import parseISO from 'date-fns/parseISO'
 
 const EditProfile = ({ profile }) => {
-  const [startDate, setStartDate] = useState(profile?.birthday && new Date(profile?.birthday))
+  const [startDate, setStartDate] = useState(
+    isValid(parseISO(profile?.birthday)) ? new Date(profile?.birthday) : Date.now()
+  )
   const editRef = useRef(null)
   const [imageUrl, setImageUrl] = useState(profile?.avatar.startsWith('http') && profile?.avatar)
   const [awsUrl, setAwsUrl] = useState(profile?.avatar.startsWith('http') && profile?.avatar)
@@ -245,7 +249,6 @@ EditProfile.getInitialProps = async ({ req, res }): Promise<any> => {
       headers: { Authorization: session?.token },
     })
 
-    console.log(data)
     return { profile: data }
   } catch (error) {
     console.log(error)
