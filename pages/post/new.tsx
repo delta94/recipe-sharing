@@ -5,6 +5,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable react/button-has-type */
 /* eslint-disable jsx-a11y/anchor-is-valid */
+import { getSession } from 'next-auth/client'
 import { EditorState, convertToRaw } from 'draft-js'
 import dynamic from 'next/dynamic'
 import { useState, ChangeEvent, useEffect, useRef } from 'react'
@@ -18,7 +19,7 @@ import Layout from '../../components/Layout'
 
 const Editor = dynamic(() => import('react-draft-wysiwyg').then((mod) => mod.Editor), { ssr: false })
 
-export default function NewPost() {
+function NewPost() {
   const [editorState, setEditorState] = useState(() => EditorState.createEmpty())
   const [imageUrl, setImageUrl] = useState('')
   const [awsUrl, setAwsUrl] = useState('')
@@ -262,3 +263,21 @@ export default function NewPost() {
     </Layout>
   )
 }
+
+NewPost.getInitialProps = async ({ req, res }): Promise<any> => {
+  try {
+    const session = await getSession({ req })
+    if (!session?.user?.name) {
+      if (res) {
+        res.writeHead(302, { Location: '/' })
+        res.end()
+      } else {
+        Router.push('/')
+      }
+    }
+  } catch (error) {
+    return {}
+  }
+}
+
+export default NewPost

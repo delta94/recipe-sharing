@@ -3,10 +3,11 @@
 import axios from '@utils/axios'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
+import Router, { useRouter } from 'next/router'
+import { getSession } from 'next-auth/client'
 import Layout from '../../components/Layout'
 
-export default function Admin() {
+const Admin = () => {
   const router = useRouter()
   const [error, setError] = useState(true)
   const [dataSource, setDataSource] = useState([])
@@ -145,3 +146,22 @@ export default function Admin() {
     </Layout>
   )
 }
+
+Admin.getInitialProps = async ({ req, res }): Promise<any> => {
+  try {
+    const session = await getSession({ req })
+    if (!session?.full_info?.is_admin) {
+      if (res) {
+        res.writeHead(302, { Location: '/' })
+        res.end()
+      } else {
+        Router.push('/')
+      }
+    }
+    return {}
+  } catch (error) {
+    return {}
+  }
+}
+
+export default Admin

@@ -5,11 +5,13 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import Image from 'next/image'
 import Layout from '@components/Layout'
-import { useRouter } from 'next/router'
+import Router, { useRouter } from 'next/router'
 import axios from '@utils/axios'
 import { useEffect, useState } from 'react'
 
-export default function PostDetail() {
+import { getSession } from 'next-auth/client'
+
+const PostDetail = () => {
   const router = useRouter()
   const [dataSource, setDataSource] = useState() as any
   const [error, setError] = useState(true)
@@ -161,3 +163,22 @@ export default function PostDetail() {
     </Layout>
   )
 }
+
+PostDetail.getInitialProps = async ({ req, res }): Promise<any> => {
+  try {
+    const session = await getSession({ req })
+    if (!session?.full_info?.is_admin) {
+      if (res) {
+        res.writeHead(302, { Location: '/' })
+        res.end()
+      } else {
+        Router.push('/')
+      }
+    }
+    return {}
+  } catch (error) {
+    return {}
+  }
+}
+
+export default PostDetail

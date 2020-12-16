@@ -4,8 +4,10 @@ import { useEffect, useState } from 'react'
 import axios from '@utils/axios'
 import Layout from '@components/Layout'
 import Link from 'next/link'
+import Router from 'next/router'
+import { getSession } from 'next-auth/client'
 
-export default function Bookmark() {
+const Bookmark = () => {
   const [error, setError] = useState(true)
   const [dataSource, setDataSource] = useState([])
 
@@ -83,3 +85,21 @@ export default function Bookmark() {
     </Layout>
   )
 }
+
+Bookmark.getInitialProps = async ({ req, res }): Promise<any> => {
+  try {
+    const session = await getSession({ req })
+    if (!session?.user?.name) {
+      if (res) {
+        res.writeHead(302, { Location: '/' })
+        res.end()
+      } else {
+        Router.push('/')
+      }
+    }
+  } catch (error) {
+    return {}
+  }
+}
+
+export default Bookmark

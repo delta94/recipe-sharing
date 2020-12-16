@@ -4,6 +4,8 @@ import { useRef } from 'react'
 import Router from 'next/router'
 import axios from 'axios'
 import { useToast } from '@chakra-ui/react'
+
+import { getSession } from 'next-auth/client'
 import Logo from '../assets/logo.svg'
 
 const Signup = () => {
@@ -140,6 +142,22 @@ const Signup = () => {
       </div>
     </div>
   )
+}
+
+Signup.getInitialProps = async ({ req, res }): Promise<any> => {
+  try {
+    const session = await getSession({ req })
+    if (session?.user?.name) {
+      if (res) {
+        res.writeHead(302, { Location: '/' })
+        res.end()
+      } else {
+        Router.push('/')
+      }
+    }
+  } catch (error) {
+    return {}
+  }
 }
 
 export default Signup
