@@ -1,3 +1,5 @@
+/* eslint-disable no-shadow */
+/* eslint-disable @typescript-eslint/no-shadow */
 /* eslint-disable react/prop-types */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
@@ -11,7 +13,7 @@ import { useState, ChangeEvent, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import authAxios from '@utils/axios'
 import axios from 'axios'
-import { useToast, Select } from '@chakra-ui/react'
+import { useToast, Select, Spinner } from '@chakra-ui/react'
 import draftToHtml from 'draftjs-to-html'
 import Layout from '@components/Layout'
 import Router from 'next/router'
@@ -31,6 +33,7 @@ const EditPost: NextPage<{ post: any; id: number }> = ({ post, id }) => {
   const [loading, setLoading] = useState(false)
   const fTRef = useRef(null)
   const cRef = useRef(null)
+  const [awsLoading, setAwsLoading] = useState(false)
 
   useEffect(() => {
     authAxios
@@ -78,6 +81,7 @@ const EditPost: NextPage<{ post: any; id: number }> = ({ post, id }) => {
       })
     } catch (error) {
       console.log(error)
+      setAwsLoading(false)
       return toast({
         title: 'Error',
         description: 'Error uploading image!',
@@ -90,20 +94,36 @@ const EditPost: NextPage<{ post: any; id: number }> = ({ post, id }) => {
   }
 
   const onImageChange = async (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files[0]
-    getBase64(file, (url) => {
-      setImageUrl(url)
-    })
-    const { data } = await axios.get('http://localhost:3001/api/sign-s3', {
-      params: {
-        'file-name': file.name,
-        'file-type': file.type,
-      },
-    })
-    const { signedRequest, url } = data
+    try {
+      const file = e.target.files[0]
+      getBase64(file, (url) => {
+        setImageUrl(url)
+      })
 
-    await uploadFile(signedRequest, file)
-    setAwsUrl(url)
+      setAwsLoading(true)
+      const { data } = await axios.get('http://localhost:3001/api/sign-s3', {
+        params: {
+          'file-name': file.name,
+          'file-type': file.type,
+        },
+      })
+      const { signedRequest, url } = data
+
+      await uploadFile(signedRequest, file)
+      setAwsUrl(url)
+      setAwsLoading(false)
+    } catch (error) {
+      console.log(error)
+      setAwsLoading(false)
+      return toast({
+        title: 'Error',
+        description: 'Error uploading image!',
+        status: 'error',
+        position: 'top',
+        duration: 3000,
+        isClosable: true,
+      })
+    }
   }
 
   const onEditorChange = (editorState) => {
@@ -213,6 +233,9 @@ const EditPost: NextPage<{ post: any; id: number }> = ({ post, id }) => {
               className='py-2 px-3 border border-gray-300 rounded-md text-sm leading-4 font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-50 active:text-gray-800 transition duration-150 ease-in-out'
             />
           </span>
+          {awsLoading && (
+            <Spinner thickness='4px' speed='0.65s' emptyColor='gray.200' color='blue.500' size='lg' ml={4} />
+          )}
         </div>
       </div>
       <div className='flex mb-4'>
