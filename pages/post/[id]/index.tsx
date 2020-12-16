@@ -74,12 +74,14 @@ export default function PostDetail() {
     <Layout title='Post'>
       <span className='px-10 flex items-center justify-between'>
         <div className='flex items-center'>
-          <Image
-            className='w-full rounded-full'
-            src={dataSource?.user_avatar ? dataSource.user_avatar : 'https://imagesvc.meredithcorp.io/v3/mm/image?url=https%3A%2F%2Fimages.media-allrecipes.com%2Fuserphotos%2F7515079.jpg&q=85'}
+          <img
+            className='h-10 w-10 rounded-full'
+            src={
+              dataSource?.user_avatar
+                ? dataSource?.user_avatar
+                : 'https://redtridentinc.com/wp-content/uploads/2019/08/blank-profile-hi-300x225.png'
+            }
             alt=''
-            width='40'
-            height='40'
           />
           <b className='pl-5'>{dataSource?.user_name}</b>
           <b className='text-blue-500 uppercase ml-5'>{`${dataSource?.country_name}`}</b>
@@ -167,12 +169,14 @@ export default function PostDetail() {
           </div>
           <div className='prose prose-lg text-gray-500 mx-auto flex flex-col items-center'>
             <figure>
-              <Image
-                className='w-full rounded-lg'
-                src={dataSource?.image ? dataSource.image : 'https://imagesvc.meredithcorp.io/v3/mm/image?url=https%3A%2F%2Fimages.media-allrecipes.com%2Fuserphotos%2F7515079.jpg&q=85'}
+              <img
+                className='h-48 w-full object-cover'
+                src={
+                  dataSource?.image !== '/' || !dataSource?.image
+                    ? dataSource?.image
+                    : 'https://ca-times.brightspotcdn.com/dims4/default/444499c/2147483647/strip/true/crop/3000x2000+0+0/resize/840x560!/quality/90/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F7d%2F24%2F0d9fed4c40c285ffca41843ae569%2Fdecadefood.jpg'
+                }
                 alt=''
-                width='768'
-                height='576'
               />
             </figure>
             <div id='content' style={{ width: '75%' }} className='mt-10' />
