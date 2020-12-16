@@ -1,6 +1,8 @@
+/* eslint-disable camelcase */
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable react/button-has-type */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useState } from 'react'
+import { useState } from 'react'
 import Layout from '../components/Layout'
 
 export default function Type() {
