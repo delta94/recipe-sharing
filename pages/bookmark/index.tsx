@@ -19,7 +19,6 @@ const Bookmark = () => {
       })
       setDataSource(data)
       setError(false)
-      debugger
     } catch (error_) {
       setError(true)
       console.log(error_)

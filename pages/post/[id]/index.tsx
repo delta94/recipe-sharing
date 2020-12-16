@@ -28,7 +28,6 @@ export default function PostDetail() {
       setIsBookmarked(data.is_bookmarked)
       document.querySelector('#content').innerHTML = data?.content
       setError(false)
-      debugger
     } catch (error_) {
       setError(true)
       if (error_?.response.status === 403) {
@@ -64,7 +63,6 @@ export default function PostDetail() {
         method: 'delete',
         data: { post_id: dataSource.id }
       })
-      debugger
     } catch (error_) {
       console.log(error_)
     }

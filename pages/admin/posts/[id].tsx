@@ -25,7 +25,6 @@ const PostDetail = () => {
       setDataSource(data)
       document.querySelector('#content').innerHTML = data?.content
       setError(false)
-      debugger
     } catch (error_) {
       setError(true)
       if (error_?.response.status === 403) {
