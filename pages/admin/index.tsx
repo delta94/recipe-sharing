@@ -28,20 +28,20 @@ export default function Admin() {
     if (error) initData()
   }, [initData])
 
-  const confirmPost = async (id: number) => {
-    try {
-      const data = await axios({
-        url: `/posts/${id}/confirm`,
-        method: 'put',
-      })
-      if (data.status === 200) {
-        alert('Xác nhận thành công bài viết')
-        router.push('/admin')
-      }
-    } catch (error_) {
-      console.log(error_)
-    }
-  }
+  // const confirmPost = async (id: number) => {
+  //   try {
+  //     const data = await axios({
+  //       url: `/posts/${id}/confirm`,
+  //       method: 'put',
+  //     })
+  //     if (data.status === 200) {
+  //       alert('Xác nhận thành công bài viết')
+  //       router.push('/admin')
+  //     }
+  //   } catch (error_) {
+  //     console.log(error_)
+  //   }
+  // }
   return (
     <Layout title='Admin'>
       <div className='relative mx-auto text-gray-600 w-2/3 mb-10'>
@@ -125,13 +125,6 @@ export default function Admin() {
                           <Link href={`/admin/posts/${item.id}`}>
                             <a>Show</a>
                           </Link>
-                        </button>
-                      </td>
-                      <td className='px-1 py-4 whitespace-nowrap'>
-                        <button
-                          onClick={() => confirmPost(item.id)}
-                          className='h-8 px-4 m-2 text-sm text-white transition-colors duration-150 bg-indigo-700 rounded-lg hover:bg-indigo-800'>
-                          Confirm
                         </button>
                       </td>
                     </tr>

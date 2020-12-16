@@ -160,12 +160,20 @@ export default function Layout({ title, children }: { title: string; children: a
                                     Your Profile
                                   </a>
                                 </Link>
-                                <a
+                                <Link href='/bookmark'>
+                                  <a
+                                    href='/bookmark'
+                                    className='block py-2 px-4 text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out'
+                                    role='menuitem'>
+                                    Your Bookmark
+                                  </a>
+                                </Link>
+                                {/* <a
                                   href='#'
                                   className='block py-2 px-4 text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out'
                                   role='menuitem'>
                                   Settings
-                                </a>
+                                </a> */}
                                 <button
                                   onClick={() => signOut()}
                                   className='block py-2 px-4 w-full text-left text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out'
@@ -179,26 +187,26 @@ export default function Layout({ title, children }: { title: string; children: a
                       </div>{' '}
                     </>
                   ) : (
-                    <div className='flex items-center space-x-8'>
-                      <Link href='/signin'>
-                        <a
-                          href='/signin'
-                          className='text-base leading-6 font-medium text-white hover:text-gray-900 focus:outline-none focus:text-gray-900 transition ease-in-out duration-150'>
-                          Sign in
-                        </a>
-                      </Link>
-
-                      <span className='inline-flex rounded-md shadow-sm'>
-                        <Link href='/signup'>
+                      <div className='flex items-center space-x-8'>
+                        <Link href='/signin'>
                           <a
-                            href='signup'
-                            className='inline-flex items-center justify-center px-4 py-2 border border-transparent text-base leading-6 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition ease-in-out duration-150'>
-                            Sign up
-                          </a>
+                            href='/signin'
+                            className='text-base leading-6 font-medium text-white hover:text-gray-900 focus:outline-none focus:text-gray-900 transition ease-in-out duration-150'>
+                            Sign in
+                        </a>
                         </Link>
-                      </span>
-                    </div>
-                  )}
+
+                        <span className='inline-flex rounded-md shadow-sm'>
+                          <Link href='/signup'>
+                            <a
+                              href='signup'
+                              className='inline-flex items-center justify-center px-4 py-2 border border-transparent text-base leading-6 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition ease-in-out duration-150'>
+                              Sign up
+                          </a>
+                          </Link>
+                        </span>
+                      </div>
+                    )}
                 </div>
               </div>
             </div>
