@@ -20,7 +20,7 @@ export default function PostDetail() {
     const { id } = router.query
     try {
       const { data } = await axios({
-        url: `/v1/posts/${id}`,
+        url: `/posts/${id}`,
         method: 'get',
       })
       setDataSource(data)
@@ -46,7 +46,7 @@ export default function PostDetail() {
     setBookmarkQuantity(bookmarkQuantity + 1)
     try {
       await axios({
-        url: `/v1/bookmarks`,
+        url: `/bookmarks`,
         method: 'post',
         data: { post_id: dataSource.id }
       })
@@ -60,7 +60,7 @@ export default function PostDetail() {
     setBookmarkQuantity(bookmarkQuantity - 1)
     try {
       await axios({
-        url: `/v1/bookmarks`,
+        url: `/bookmarks`,
         method: 'delete',
         data: { post_id: dataSource.id }
       })
@@ -85,7 +85,7 @@ export default function PostDetail() {
           <b className='text-blue-500 uppercase ml-5'>{`${dataSource?.country_name}`}</b>
         </div>
         <div className='flex items-center'>
-          <p className='font-bold mr-10'>Bookmark quantity: {bookmarkQuantity}</p>
+          <p className='font-bold mr-10'>Bookmark: {bookmarkQuantity}</p>
           {isBookmarked ? (
             <BsBookmarkFill color='#3730a3' size={24} onClick={unBookmark} />
           ) : (
@@ -175,7 +175,7 @@ export default function PostDetail() {
                 height='576'
               />
             </figure>
-            <div id='content' />
+            <div id='content' style={{ width: '75%' }} className='mt-10' />
           </div>
         </div>
       </div>

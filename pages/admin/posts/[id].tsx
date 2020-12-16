@@ -17,7 +17,7 @@ export default function PostDetail() {
     const { id } = router.query
     try {
       const { data } = await axios({
-        url: `/v1/posts/${id}`,
+        url: `/posts/${id}`,
         method: 'get',
       })
       setDataSource(data)
@@ -40,7 +40,7 @@ export default function PostDetail() {
     const { id } = router.query
     try {
       const data = await axios({
-        url: `/v1/posts/${id}/confirm`,
+        url: `/posts/${id}/confirm`,
         method: 'put'
       })
       if (data.status === 200) {
@@ -154,7 +154,7 @@ export default function PostDetail() {
                 height='576'
               />
             </figure>
-            <div id='content' />
+            <div id='content' style={{ width: '75%' }} className='mt-10' />
           </div>
         </div>
       </div>

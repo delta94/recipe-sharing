@@ -12,7 +12,7 @@ export default function Bookmark() {
   const initData = async () => {
     try {
       const { data } = await axios({
-        url: `/v1/bookmarks/all`,
+        url: `/bookmarks/all`,
         method: 'get',
       })
       setDataSource(data)
@@ -35,7 +35,7 @@ export default function Bookmark() {
           </h2>
         </div>
         <div className='mt-12 grid gap-5 max-w-lg mx-auto lg:grid-cols-3 lg:max-w-none'>
-          {dataSource.map(item => (
+          {dataSource.map((item) => (
             <Link href={`/post/${item.id}`}>
               <div className='flex flex-col rounded-lg shadow-lg overflow-hidden'>
                 <div className='flex-shrink-0'>

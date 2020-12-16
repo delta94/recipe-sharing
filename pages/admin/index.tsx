@@ -14,7 +14,7 @@ export default function Admin() {
   const initData = async () => {
     try {
       const { data } = await axios({
-        url: `/v1/posts/unconfirmed`,
+        url: `/posts/unconfirmed`,
         method: 'get',
       })
       setDataSource(data)
@@ -31,7 +31,7 @@ export default function Admin() {
   const confirmPost = async (id: number) => {
     try {
       const data = await axios({
-        url: `/v1/posts/${id}/confirm`,
+        url: `/posts/${id}/confirm`,
         method: 'put',
       })
       if (data.status === 200) {
@@ -95,7 +95,7 @@ export default function Admin() {
                     </th>
                   </tr>
                 </thead>
-                {dataSource.map(item => (
+                {dataSource.map((item) => (
                   <tbody className='bg-white divide-y divide-gray-200'>
                     <tr>
                       <td className='px-6 py-4 whitespace-nowrap'>
