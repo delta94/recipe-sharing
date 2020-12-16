@@ -27,24 +27,55 @@ export default function Home() {
       .then(({ data }) => setPosts(data))
       .catch((err) => console.log(err))
   }, [])
+
+  const search = () => {
+    console.log(foodType, country)
+    if (foodType && country) {
+      axios
+        .get(`/posts?country_id=${country}&&food_type_id=${foodType}`)
+        .then(({ data }) => setPosts(data))
+        .catch((err) => console.log(err))
+    } else if (foodType) {
+      axios
+        .get(`/posts?food_type_id=${foodType}`)
+        .then(({ data }) => setPosts(data))
+        .catch((err) => console.log(err))
+    } else if (country) {
+      axios
+        .get(`/posts?country_id=${country}`)
+        .then(({ data }) => setPosts(data))
+        .catch((err) => console.log(err))
+    } else {
+      axios
+        .get('/posts')
+        .then(({ data }) => setPosts(data))
+        .catch((err) => console.log(err))
+    }
+  }
+
   return (
     <Layout title='Home'>
       <div className='flex mb-4'>
-        <Select placeholder='Select food type' mr={5} onChange={(value: number) => setFoodType(value)}>
+        <Select
+          placeholder='Select food type'
+          mr={5}
+          onChange={(event) => {
+            setFoodType(event.target.value)
+          }}>
           {foodTypes.map((f) => (
             <option key={f.id} value={f.id}>
               {f.name}
             </option>
           ))}
         </Select>
-        <Select placeholder='Select country' mr={5}>
+        <Select placeholder='Select country' mr={5} onChange={(event) => setCountry(event.target.value)}>
           {countries.map((c) => (
             <option key={c.id} value={c.id}>
               {c.name}
             </option>
           ))}
         </Select>
-        <IconButton colorSchema='blue' aria-label='Search' icon={<SearchIcon />}>
+        <IconButton colorSchema='blue' aria-label='Search' icon={<SearchIcon />} onClick={search}>
           Search
         </IconButton>
       </div>
@@ -62,7 +93,15 @@ export default function Home() {
             <Link href={`/post/${item.id}`}>
               <div className='flex flex-col rounded-lg shadow-lg overflow-hidden'>
                 <div className='flex-shrink-0'>
-                  <img className='h-48 w-full object-cover' src={item?.image} alt='' />
+                  <img
+                    className='h-48 w-full object-cover'
+                    src={
+                      item?.image !== '/' || !item?.image
+                        ? item?.image
+                        : 'https://ca-times.brightspotcdn.com/dims4/default/444499c/2147483647/strip/true/crop/3000x2000+0+0/resize/840x560!/quality/90/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F7d%2F24%2F0d9fed4c40c285ffca41843ae569%2Fdecadefood.jpg'
+                    }
+                    alt=''
+                  />
                 </div>
                 <div className='flex-1 bg-white p-6 flex flex-col justify-between'>
                   <div className='flex-1'>
@@ -78,7 +117,15 @@ export default function Home() {
                   <div className='mt-6 flex items-center'>
                     <div className='flex-shrink-0'>
                       <a href='#'>
-                        <img className='h-10 w-10 rounded-full' src={item?.user_avatar} alt='' />
+                        <img
+                          className='h-10 w-10 rounded-full'
+                          src={
+                            item?.user_avatar
+                              ? item?.user_avatar
+                              : 'https://redtridentinc.com/wp-content/uploads/2019/08/blank-profile-hi-300x225.png'
+                          }
+                          alt=''
+                        />
                       </a>
                     </div>
                     <div className='ml-3'>
