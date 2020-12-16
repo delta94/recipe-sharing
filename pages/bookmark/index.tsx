@@ -11,22 +11,22 @@ const Bookmark = () => {
   const [error, setError] = useState(true)
   const [dataSource, setDataSource] = useState([])
 
-  const initData = async () => {
-    try {
-      const { data } = await axios({
-        url: `/bookmarks/all`,
-        method: 'get',
-      })
-      setDataSource(data)
-      setError(false)
-    } catch (error_) {
-      setError(true)
-      console.log(error_)
-    }
-  }
   useEffect(() => {
+    const initData = async () => {
+      try {
+        const { data } = await axios({
+          url: `/bookmarks/all`,
+          method: 'get',
+        })
+        setDataSource(data)
+        setError(false)
+      } catch (error_) {
+        setError(true)
+        console.log(error_)
+      }
+    }
     if (error) initData()
-  }, [initData])
+  }, [error])
   return (
     <Layout title='Bookmark'>
       <div className='relative max-w-7xl mx-auto'>
@@ -38,11 +38,15 @@ const Bookmark = () => {
         <div className='mt-12 grid gap-5 max-w-lg mx-auto lg:grid-cols-3 lg:max-w-none'>
           {dataSource.map((item) => (
             <Link href={`/post/${item.id}`}>
-              <div className='flex flex-col rounded-lg shadow-lg overflow-hidden'>
+              <div className='flex flex-col rounded-lg shadow-lg overflow-hidden cursor-pointer'>
                 <div className='flex-shrink-0'>
                   <img
                     className='h-48 w-full object-cover'
-                    src='https://imagesvc.meredithcorp.io/v3/mm/image?url=https%3A%2F%2Fimages.media-allrecipes.com%2Fuserphotos%2F7407466.jpg&q=85'
+                    src={
+                      item?.image?.startsWith('http')
+                        ? item?.image
+                        : 'https://ca-times.brightspotcdn.com/dims4/default/444499c/2147483647/strip/true/crop/3000x2000+0+0/resize/840x560!/quality/90/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F7d%2F24%2F0d9fed4c40c285ffca41843ae569%2Fdecadefood.jpg'
+                    }
                     alt=''
                   />
                 </div>
@@ -74,6 +78,7 @@ const Bookmark = () => {
                         </a>
                       </p>
                     </div>
+
                   </div>
                 </div>
               </div>
@@ -96,6 +101,7 @@ Bookmark.getInitialProps = async ({ req, res }): Promise<any> => {
         Router.push('/')
       }
     }
+    return {}
   } catch (error) {
     return {}
   }

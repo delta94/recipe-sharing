@@ -275,6 +275,7 @@ NewPost.getInitialProps = async ({ req, res }): Promise<any> => {
         Router.push('/')
       }
     }
+    return {}
   } catch (error) {
     return {}
   }

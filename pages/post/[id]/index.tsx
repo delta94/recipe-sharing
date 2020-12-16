@@ -3,12 +3,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/button-has-type */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import Image from 'next/image'
 import Layout from '@components/Layout'
 import { useRouter } from 'next/router'
 import axios from '@utils/axios'
 import { useEffect, useState } from 'react'
 import { BsBookmarkFill, BsBookmark } from 'react-icons/bs'
+import { useToast} from '@chakra-ui/react'
 
 export default function PostDetail() {
   const router = useRouter()
@@ -16,6 +16,7 @@ export default function PostDetail() {
   const [error, setError] = useState(true)
   const [bookmarkQuantity, setBookmarkQuantity] = useState(0)
   const [isBookmarked, setIsBookmarked] = useState(false)
+  const toast = useToast()
   const initData = async () => {
     const { id } = router.query
     try {
@@ -31,8 +32,19 @@ export default function PostDetail() {
     } catch (error_) {
       setError(true)
       if (error_?.response.status === 403) {
-        alert('Bài viết chưa được phê duyệt')
-        router.push('/')
+        toast({
+          title: 'Error',
+          description: 'This post hasn\'t been approved yet!',
+          status: 'error',
+          position: 'top',
+          duration: 1500,
+          isClosable: true,
+        })
+
+        setTimeout(() => {
+          router.push('/')
+        }, 1500);
+
       }
     }
   }
